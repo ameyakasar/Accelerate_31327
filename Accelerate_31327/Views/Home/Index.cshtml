@@ -1,0 +1,35 @@
+﻿@model  IEnumerable<Accelerate_31327.Models.EmployeeDetailModel>
+
+
+@{
+    ViewBag.Title = "Employee Details";
+    AjaxOptions options = new AjaxOptions
+    {
+        UpdateTargetId = "employeeDetails",
+        LoadingElementId = "divLoading",
+    };
+}
+@*@{
+        Layout = null;
+    }*@
+
+<h2>Employee Details</h2>
+<link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/gridmvc.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")"></script>
+@using (Ajax.BeginForm("_PartialEmployeeDetails", options))
+{
+    <div id="divLoading" style="color:red;width:200px;background-color:yellow;font-size:larger;display:none;position:absolute;">Loading ....</div>
+    <div style="width:600px">
+        @Html.TextBox("SerachEmployeeDetails", "", new { style = "width:70%" })
+        <button type="submit" class="btn-bootstrap-dialog btn btn-primary">Search</button>
+    </div>
+}
+@Html.ActionLink("Add Employee ", "OperationDialogBox", "Home",
+                null, new { @id = "btnCreate", @class = "btn-bootstrap-dialog btn btn-primary navbar-text navbar-right" })
+<div class="code-cut" id="employeeDetails">
+    @Html.Partial("/Views/Shared/_PartialEmployeeDetails.cshtml", Model);
+</div>
+

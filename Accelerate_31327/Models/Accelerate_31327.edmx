@@ -1,0 +1,316 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="AccelerateModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AppUsers">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="UserRole" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Employee_Details">
+          <Key>
+            <PropertyRef Name="Emp_ID" />
+          </Key>
+          <Property Name="Emp_ID" Type="int" Nullable="false" />
+          <Property Name="Emp_FirstName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Emp_LastName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Emp_Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Emp_Designation" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employee_Skill_Details">
+          <Key>
+            <PropertyRef Name="Skill_ID" />
+          </Key>
+          <Property Name="Skill_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Emp_ID" Type="int" />
+          <Property Name="Technology_ID" Type="int" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="RoleDescription" Type="varchar" MaxLength="1000" />
+          <Property Name="Active" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Technology_Details">
+          <Key>
+            <PropertyRef Name="Technology_ID" />
+          </Key>
+          <Property Name="Technology_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Technology_Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Emp_ID">
+          <End Role="Employee_Details" Type="Self.Employee_Details" Multiplicity="0..1" />
+          <End Role="Employee_Skill_Details" Type="Self.Employee_Skill_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee_Details">
+              <PropertyRef Name="Emp_ID" />
+            </Principal>
+            <Dependent Role="Employee_Skill_Details">
+              <PropertyRef Name="Emp_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Technology_ID">
+          <End Role="Technology_Details" Type="Self.Technology_Details" Multiplicity="0..1" />
+          <End Role="Employee_Skill_Details" Type="Self.Employee_Skill_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Technology_Details">
+              <PropertyRef Name="Technology_ID" />
+            </Principal>
+            <Dependent Role="Employee_Skill_Details">
+              <PropertyRef Name="Technology_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetEmployeeList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SearchText" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="AccelerateModelStoreContainer">
+          <EntitySet Name="AppUsers" EntityType="Self.AppUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee_Details" EntityType="Self.Employee_Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee_Skill_Details" EntityType="Self.Employee_Skill_Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Technology_Details" EntityType="Self.Technology_Details" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Emp_ID" Association="Self.FK_Emp_ID">
+            <End Role="Employee_Details" EntitySet="Employee_Details" />
+            <End Role="Employee_Skill_Details" EntitySet="Employee_Skill_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Technology_ID" Association="Self.FK_Technology_ID">
+            <End Role="Technology_Details" EntitySet="Technology_Details" />
+            <End Role="Employee_Skill_Details" EntitySet="Employee_Skill_Details" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AccelerateModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Employee_Details">
+          <Key>
+            <PropertyRef Name="Emp_ID" />
+          </Key>
+          <Property Name="Emp_ID" Type="Int32" Nullable="false" />
+          <Property Name="Emp_FirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Emp_LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Emp_Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Emp_Designation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Employee_Skill_Details" Relationship="Self.FK_Emp_ID" FromRole="Employee_Details" ToRole="Employee_Skill_Details" />
+        </EntityType>
+        <EntityType Name="Employee_Skill_Details">
+          <Key>
+            <PropertyRef Name="Skill_ID" />
+          </Key>
+          <Property Name="Skill_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Emp_ID" Type="Int32" />
+          <Property Name="Technology_ID" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Employee_Details" Relationship="Self.FK_Emp_ID" FromRole="Employee_Skill_Details" ToRole="Employee_Details" />
+          <NavigationProperty Name="Technology_Details" Relationship="Self.FK_Technology_ID" FromRole="Employee_Skill_Details" ToRole="Technology_Details" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="RoleName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RoleDescription" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Active" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Technology_Details">
+          <Key>
+            <PropertyRef Name="Technology_ID" />
+          </Key>
+          <Property Name="Technology_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Technology_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Employee_Skill_Details" Relationship="Self.FK_Technology_ID" FromRole="Technology_Details" ToRole="Employee_Skill_Details" />
+        </EntityType>
+        <Association Name="FK_Emp_ID">
+          <End Role="Employee_Details" Type="Self.Employee_Details" Multiplicity="0..1" />
+          <End Role="Employee_Skill_Details" Type="Self.Employee_Skill_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee_Details">
+              <PropertyRef Name="Emp_ID" />
+            </Principal>
+            <Dependent Role="Employee_Skill_Details">
+              <PropertyRef Name="Emp_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Technology_ID">
+          <End Role="Technology_Details" Type="Self.Technology_Details" Multiplicity="0..1" />
+          <End Role="Employee_Skill_Details" Type="Self.Employee_Skill_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Technology_Details">
+              <PropertyRef Name="Technology_ID" />
+            </Principal>
+            <Dependent Role="Employee_Skill_Details">
+              <PropertyRef Name="Technology_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AccelerateEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Employee_Details" EntityType="Self.Employee_Details" />
+          <EntitySet Name="Employee_Skill_Details" EntityType="Self.Employee_Skill_Details" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Technology_Details" EntityType="Self.Technology_Details" />
+          <AssociationSet Name="FK_Emp_ID" Association="Self.FK_Emp_ID">
+            <End Role="Employee_Details" EntitySet="Employee_Details" />
+            <End Role="Employee_Skill_Details" EntitySet="Employee_Skill_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Technology_ID" Association="Self.FK_Technology_ID">
+            <End Role="Technology_Details" EntitySet="Technology_Details" />
+            <End Role="Employee_Skill_Details" EntitySet="Employee_Skill_Details" />
+          </AssociationSet>
+          <EntitySet Name="AppUsers" EntityType="AccelerateModel.AppUser" />
+          <FunctionImport Name="GetEmployeeList" ReturnType="Collection(AccelerateModel.GetEmployeeList_Result)">
+            <Parameter Name="SearchText" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="AppUser">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="UserRole" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <ComplexType Name="GetEmployeeList_Result">
+          <Property Type="Int32" Name="Emp_ID" Nullable="false" />
+          <Property Type="String" Name="Emp_FirstName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="Emp_LastName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="Emp_Email" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="Emp_Designation" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="Technologies" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AccelerateModelStoreContainer" CdmEntityContainer="AccelerateEntities">
+          <EntitySetMapping Name="Employee_Details">
+            <EntityTypeMapping TypeName="AccelerateModel.Employee_Details">
+              <MappingFragment StoreEntitySet="Employee_Details">
+                <ScalarProperty Name="Emp_ID" ColumnName="Emp_ID" />
+                <ScalarProperty Name="Emp_FirstName" ColumnName="Emp_FirstName" />
+                <ScalarProperty Name="Emp_LastName" ColumnName="Emp_LastName" />
+                <ScalarProperty Name="Emp_Email" ColumnName="Emp_Email" />
+                <ScalarProperty Name="Emp_Designation" ColumnName="Emp_Designation" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employee_Skill_Details">
+            <EntityTypeMapping TypeName="AccelerateModel.Employee_Skill_Details">
+              <MappingFragment StoreEntitySet="Employee_Skill_Details">
+                <ScalarProperty Name="Skill_ID" ColumnName="Skill_ID" />
+                <ScalarProperty Name="Emp_ID" ColumnName="Emp_ID" />
+                <ScalarProperty Name="Technology_ID" ColumnName="Technology_ID" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="AccelerateModel.Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Technology_Details">
+            <EntityTypeMapping TypeName="AccelerateModel.Technology_Details">
+              <MappingFragment StoreEntitySet="Technology_Details">
+                <ScalarProperty Name="Technology_ID" ColumnName="Technology_ID" />
+                <ScalarProperty Name="Technology_Name" ColumnName="Technology_Name" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AppUsers">
+            <EntityTypeMapping TypeName="AccelerateModel.AppUser">
+              <MappingFragment StoreEntitySet="AppUsers">
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetEmployeeList" FunctionName="AccelerateModel.Store.GetEmployeeList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="AccelerateModel.GetEmployeeList_Result">
+                <ScalarProperty Name="Emp_ID" ColumnName="Emp_ID" />
+                <ScalarProperty Name="Emp_FirstName" ColumnName="Emp_FirstName" />
+                <ScalarProperty Name="Emp_LastName" ColumnName="Emp_LastName" />
+                <ScalarProperty Name="Emp_Email" ColumnName="Emp_Email" />
+                <ScalarProperty Name="Emp_Designation" ColumnName="Emp_Designation" />
+                <ScalarProperty Name="Technologies" ColumnName="Technologies" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

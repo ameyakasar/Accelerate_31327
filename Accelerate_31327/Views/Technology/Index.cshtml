@@ -1,0 +1,121 @@
+﻿
+@model  List<Accelerate_31327.Models.TechnologyModel>
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Technology Details";
+}
+@*@{
+        Layout = null;
+    }*@
+
+<h2>Technology Details</h2>
+<link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/gridmvc.min.js")"></script>
+
+@Html.ActionLink("Add Technology ", "AddEditTechnology", "Technology",
+                null, new { @id = "btnCreate", @class = "btn-bootstrap-dialog btn btn-primary navbar-text navbar-right" })
+<div class="code-cut" id="employeeDetails">
+
+    @Html.Grid(Model).Columns(columns =>
+                    {
+                        columns.Add(c => c.Technology_ID).Titled("Technology ID").Filterable(true);
+                        columns.Add(c => c.Technology_Name).Titled("Technology Name").Filterable(true);
+                             columns.Add()
+                        .Encoded(false)
+                        .Sanitized(false)
+                        .RenderValueAs(o => Html.ActionLink("Edit", "AddEditTechnology", new { id = o.Technology_ID }, new { @class = "edit" }).ToString() + " | " +
+                                            Html.ActionLink("Details", "TechnologyDetail", new { id = o.Technology_ID }, new { @class = "detail" }).ToString() + " | " +
+                                            Html.ActionLink("Delete", "TechnologyDelete", new { id = o.Technology_ID }, new { @class = "delete" }));
+
+
+                    }).WithPaging(10).Sortable(true).Named("EMP")
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        //Optional: turn the chache off
+        $.ajaxSetup({ cache: false });
+
+        $('#btnCreate').click(function () {
+            $('#dialogContent').load(this.href, function () {
+                $('#dialogDiv').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                }, 'show');
+                // bindForm(this);
+            });
+            return false;
+        });
+
+        $('.edit').click(function () {
+            $('#dialogContent').load(this.href, function () {
+                $('#dialogDiv').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                }, 'show');
+                // bindForm(this);
+            });
+            return false;
+        });
+
+        $('.detail').click(function () {
+            $('#dialogContent').load(this.href, function () {
+                $('#dialogDiv').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                }, 'show');
+                // bindForm(this);
+            });
+            return false;
+        });
+
+        $('.delete').click(function () {
+            $('#dialogContent').load(this.href, function () {
+                $('#dialogDiv').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                }, 'show');
+                // bindForm(this);
+            });
+            return false;
+        });
+    });
+
+    function bindForm(dialog) {
+        $('form', dialog).submit(function () {
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function (result) {
+                    if (result.success) {
+                        $('#dialogDiv').modal('hide');
+                        // Refresh:
+                        // location.reload();
+                    } else {
+                        $('#dialogContent').html(result);
+                        bindForm();
+                    }
+                }
+            });
+            return false;
+        });
+    }
+
+</script>
+
+
+
+<!-- modal placeholder-->
+<div id='dialogDiv' class='modal fade' tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='dialogContent'></div>
+        </div>
+    </div>
+</div>

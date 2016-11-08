@@ -1,0 +1,208 @@
+﻿@model Accelerate_31327.Models.EmployeeDetailModel
+
+
+<link href="~/Scripts/ChosenJSandCSS/chosen.css" rel="stylesheet" />
+<script src="~/Scripts/ChosenJSandCSS/chosen.jquery.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    @if (Convert.ToBoolean(ViewBag.detailsFlag))
+    {
+        <h3 id="myModalLabel">Employee Detail</h3>
+    }else if(Convert.ToBoolean(ViewBag.deleteFlag))
+    {
+     <h3 id="myModalLabel">Employee Delete</h3>    
+    }
+    else
+    {
+        <h3 id="myModalLabel">Add Employee </h3>
+    }
+</div>
+@using (Ajax.BeginForm("AddEditDetail", "Home", new AjaxOptions
+{
+    HttpMethod = "POST",
+    OnSuccess = "onSuccess",
+    OnFailure = "",
+    OnBegin = "",
+    OnComplete = "",
+    UpdateTargetId = ""
+}))
+{
+    @Html.ValidationSummary(true)
+    var showOnly = Convert.ToBoolean(ViewBag.detailsFlag);
+    var showDeleteOnly = Convert.ToBoolean(ViewBag.deleteFlag);
+    <div class="modal-body" style="width:160%">
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @if (showDeleteOnly)
+            {
+                <span>Are you sure you want to delete this?</span>
+            }
+            else { 
+
+            @Html.ValidationSummary(true)
+            if (Model != null && Model.Emp_ID == 0)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Emp_ID, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @if (showOnly)
+                        {
+                            @Html.DisplayFor(model => model.Emp_ID)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.Emp_ID)
+                            @Html.ValidationMessageFor(model => model.Emp_ID)
+                        }
+
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Emp_ID, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @if (showOnly)
+                        {
+                            @Html.DisplayFor(model => model.Emp_ID, new { @class = "control-label col-md-2", @readyonly = true })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.Emp_ID, new { @class = "", @readyonly = true })
+                            @Html.ValidationMessageFor(model => model.Emp_ID)
+                        }
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                @Html.LabelFor(model => model.Emp_FirstName, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @if (showOnly)
+                    {
+                        @Html.DisplayFor(model => model.Emp_FirstName)
+                    }
+                    else
+                    {
+                        @Html.EditorFor(model => model.Emp_FirstName)
+                        @Html.ValidationMessageFor(model => model.Emp_FirstName)
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Emp_LastName, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @if (showOnly)
+                    {
+                        @Html.DisplayFor(model => model.Emp_LastName)
+                    }
+                    else
+                    {
+                        @Html.EditorFor(model => model.Emp_LastName)
+                        @Html.ValidationMessageFor(model => model.Emp_LastName)
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Emp_Email, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @if (showOnly)
+                    {
+                        @Html.DisplayFor(model => model.Emp_Email)
+                    }
+                    else
+                    {
+                        @Html.EditorFor(model => model.Emp_Email)
+                        @Html.ValidationMessageFor(model => model.Emp_Email)
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Emp_Designation, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @if (showOnly)
+                    {
+                        @Html.DisplayFor(model => model.Emp_Designation)
+                    }
+                    else
+                    {
+                        @Html.EditorFor(model => model.Emp_Designation)
+                        @Html.ValidationMessageFor(model => model.Emp_Designation)
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Technology", new { @class = "control-label col-md-2" })
+                @if (showOnly)
+                {
+                    @Html.DropDownListFor(m => m.TechnologyList, new SelectList(Model.TechnologyList, "Technology_ID", "Technology_Name"),
+                        new { @multiple = "multiple", @placeholder = "Please select technology", @class = "ddlMultiSlectBox", @disabled = "disabled" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(m => m.TechnologyList, new SelectList(Model.TechnologyList, "Technology_ID", "Technology_Name"),
+                new { @multiple = "multiple", @placeholder = "Please select technology", @class = "ddlMultiSlectBox" })
+                }
+                <script>
+                    $('.ddlMultiSlectBox').val([@Model.SeletedTechnology]);
+                    $('.ddlMultiSlectBox').trigger('chosen:updated');
+                </script>
+                @Html.HiddenFor(m => m.SeletedTechnology)
+            </div>
+            }
+        </div>
+    </div>
+    <style>
+        .form-control {
+            width: 100px;
+        }
+    </style>
+    <div class="modal-footer">
+        @if (showOnly)
+        {
+        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">OK</button> 
+        }else if(showDeleteOnly)
+        {
+            @Html.ActionLink("OK", "DeleteEmployee", new { id = Model.Emp_ID }, new { @class = "btn btn-primary" })
+        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">cancel</button>
+        }
+        else{
+             <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        }
+       
+
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //window.asd = $('.ddlMultiSlectBox').SumoSelect({ csvDispCount: 4,
+            //    triggerChangeCombined: true
+            //});
+
+            $('.ddlMultiSlectBox').on('change', function (evt, params) {
+                $("#SeletedTechnology").val($('.ddlMultiSlectBox').val());
+            });
+        });
+
+        $(".ddlMultiSlectBox").chosen({
+            no_results_text: "Oops, nothing found!",
+            width: "30%",
+            placeholder_text_single: "Select Technologies"
+        });
+        var onSuccess = function (result) {
+            // enable unobtrusive validation for the contents
+            // that was injected into the <div id="result"></div> node
+            $.validator.unobtrusive.parse($(employeeDetails));
+            window.location.reload();
+        };
+    </script>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>

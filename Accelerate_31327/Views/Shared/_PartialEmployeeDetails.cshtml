@@ -1,0 +1,127 @@
+﻿@model  IEnumerable<Accelerate_31327.Models.EmployeeDetailModel>
+@using GridMvc.Html
+@Html.Grid(Model).Columns(columns =>
+                    {
+                        columns.Add(c => c.Emp_ID).Titled("Employee ID").Filterable(true);
+                        columns.Add(c => c.Emp_FirstName).Titled("First Name").Filterable(true);
+                        columns.Add(c => c.Emp_LastName).Titled("Last Name").Filterable(true);
+                        columns.Add(c => c.Emp_Email).Titled("Email").Filterable(true);
+                        columns.Add(c => c.Emp_Designation).Titled("Designation").Filterable(true);
+                        columns.Add(c => c.SeletedTechnologyText).Titled("Technologies").Filterable(true);
+
+                        columns.Add()
+                        .Encoded(false)
+                        .Sanitized(false)
+                            //.RenderValueAs(o => Html.ActionLink("Edit", "Edit", new { id = o.Emp_ID }));
+                        .RenderValueAs(o => Html.ActionLink("Edit", "OperationDialogBox", new { id = o.Emp_ID }, new { @class = "edit" }).ToString() + " | " +
+                                            Html.ActionLink("Details", "OperationDialogBoxForDetails", new { id = o.Emp_ID }, new { @class = "detail" }).ToString() + " | " +
+                                            Html.ActionLink("Delete", "OperationDialogBoxForDelete", new { id = o.Emp_ID }, new { @class = "delete" }));
+
+
+                    }).WithPaging(10).Sortable(true).Named("EMP")
+<script type="text/javascript">
+
+    $(function () {
+
+        //Optional: turn the chache off
+        $.ajaxSetup({ cache: false });
+
+        $('#btnCreate').click(function () {
+            $('#dialogContent').load(this.href, function () {
+                $('#dialogDiv').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                }, 'show');
+                // bindForm(this);
+            });
+            return false;
+        });
+
+        $('.edit').click(function () {
+            $('#dialogContent').load(this.href, function () {
+                $('#dialogDiv').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                }, 'show');
+                // bindForm(this);
+            });
+            return false;
+        });
+
+        $('.detail').click(function () {
+            $('#dialogContent').load(this.href, function () {
+                $('#dialogDiv').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                }, 'show');
+                // bindForm(this);
+            });
+            return false;
+        });
+
+        $('.delete').click(function () {
+            $('#dialogContent').load(this.href, function () {
+                $('#dialogDiv').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                }, 'show');
+                // bindForm(this);
+            });
+            return false;
+        });
+    });
+
+    function bindForm(dialog) {
+        $('form', dialog).submit(function () {
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function (result) {
+                    if (result.success) {
+                        $('#dialogDiv').modal('hide');
+                        // Refresh:
+                        // location.reload();
+                    } else {
+                        $('#dialogContent').html(result);
+                        bindForm();
+                    }
+                }
+            });
+            return false;
+        });
+    }
+    
+</script>
+<!-- modal placeholder-->
+<div id='dialogDiv' class='modal fade' tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='dialogContent'></div>
+        </div>
+    </div>
+</div>
+<!-- Modal Dialog -->
+<div class="modal fade" id="confirmDelete" role="dialog" aria-labelledby="confirmDeleteLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">Delete Parmanently</h4>
+            </div>
+            <div class="modal-body" style="height: 75px">
+                <p>Are you sure about this ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-ok">
+                    Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
