@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Accelerate_31327.Models;
 using Accelerate_31327.Security;
 using Accelerate_31327.Repository;
-
+//main controller
 namespace Accelerate_31327.Controllers
 {
     public class HomeController : Controller
